@@ -1,0 +1,38 @@
+##############################
+## Setting up docker compose environment
+
+# 1. create directories to mount with airflow containers
+=>
+    mkdir -p ./dags ./config ./logs ./plugins 
+
+# 2. Create Airflow User Id, which will be assigned via environment
+# if Airflow User Id not created, the files will be OWNED by root
+# Also creating Airflow User Id allows to control permissions of Airlfow Users
+# this can also be configured via `.env` files
+
+=>
+    echo -e "AIRFLOW_UID=$(id -u)" > .env
+
+# Build customized docker image from Dockerfile
+# we can comment image in docker compose file and instrcut to build with '.'
+EG: //to comment the image section in docker compose and follow the steps
+=> 
+    # image:${AIRFLOW_IMAGE_NAME: -apache/airflow:2.9.1}
+    build: .
+
+##############################
+# Install required packages on the contianer using Dockerfile
+# this file should be on same directory
+
+=> 
+    FROM apache/airflow:2.9.1
+    ADD requirements.txt .
+    RUN pip install apache_airflow=${AIRFLOW_VERSION} -r requirements.txt
+
+=>
+    docker-compose up build
+
+##############################
+# removing docker images built from the docker compose
+docker-compose down --volumes --rmi all
+
