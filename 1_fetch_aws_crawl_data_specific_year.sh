@@ -24,5 +24,5 @@ read -p "Enter the year: " year_input
 aws s3 ls s3://${s3_bucket}/${source_dir}/ 2>/dev/null | head -n ${num_files} > download_filenames.txt
 
 # download files
-aws s3 ls s3://${s3_bucket}/${source_dir}/ | head -n ${num_files} | awk '{print $4}' | xargs -I {} aws s3 cp s3://${s3_bucket}/${source_dir}/{} $(pwd)/data/
+aws s3 ls s3://${s3_bucket}/${source_dir}/ | head -n ${num_files} | awk '{print $4}' #| xargs -I {} aws s3 cp s3://${s3_bucket}/${source_dir}/{} $(pwd)/data/
 
